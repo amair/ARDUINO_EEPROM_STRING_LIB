@@ -20,8 +20,8 @@ void setup() {
     strncpy (string_array[4],"silly", strlen("silly")+1);
     strncpy (string_array[5],"furry", strlen("furry")+1);
     strncpy (string_array[6],"that", strlen("that")+1);
-    strncpy (string_array[6],"it", strlen("it")+1);
-    strncpy (string_array[6],"is", strlen("is")+1);
+    strncpy (string_array[7],"it", strlen("it")+1);
+    strncpy (string_array[8],"is", strlen("is")+1);
 
 }
 

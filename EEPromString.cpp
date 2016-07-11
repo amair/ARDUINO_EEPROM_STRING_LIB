@@ -64,7 +64,6 @@ bool EEPROMSTRING::pushString(const char * new_string)
   bool bOK = false;
   int free_mem = EEPROM.length()-1-(num_strings*3); //Remove the fixed table size 1 byte for num strings, 3 bytes for each table entry
 
-  debug("Num strings", num_strings);
   debug("Free mem - table", free_mem);
 
   debug_table();
@@ -82,8 +81,6 @@ bool EEPROMSTRING::pushString(const char * new_string)
       start_address = EEPROM.length()-1; // EEPROM is empty so start at the end
     else // Calculate the end of the last string
       start_address = getStartAddress(num_strings) - getStringLength(num_strings); // Last start address - length
-
-      debug("Start Address", start_address);
 
     increaseNumStrings();
     
@@ -130,20 +127,13 @@ void EEPROMSTRING::increaseNumStrings( void)
 void EEPROMSTRING::writeStringLength(const unsigned char string_num, const unsigned char len)
 {
   EEPROM.write(3*num_strings, len);
-    debug("write_lemgth", len);
-
 }
 
 
 void EEPROMSTRING::writeStartAddress(const unsigned char string_num, const unsigned int s_a)
 {
-  debug("write_sa", (s_a));
-
     EEPROM.write((3*string_num)-2, highByte(s_a) );
     EEPROM.write((3*string_num)-1, lowByte(s_a) );
-
-  debug("write_hi", highByte(s_a));
-  debug("write_lo", lowByte(s_a));
 }
 
 const unsigned int EEPROMSTRING::getStartAddress(const unsigned char string_num )
@@ -156,12 +146,8 @@ const unsigned int EEPROMSTRING::getStartAddress(const unsigned char string_num 
   high_byte = EEPROM.read((3*string_num)-2);
   low_byte = EEPROM.read((3*string_num)-1);
 
-  debug("read_hi", high_byte);
-  debug("read_lo", low_byte);
-
   s_a = word(high_byte, low_byte);
 
-  debug("start_a", s_a);
 } else
   {
     s_a=EEPROM.length(); //Default to the first string (if one even exists)
@@ -175,35 +161,35 @@ const unsigned char EEPROMSTRING::getStringLength(const unsigned char string_num
   return (EEPROM.read(3*num_strings));
 }
 
-  void EEPROMSTRING::debug(char const * str, const unsigned int val)
-  {
-    Serial.print("DEBUG: ");
-    Serial.print(str);
-    Serial.print(": ");
-    Serial.println(val);
-  }
+ void EEPROMSTRING::debug(char const * str, const unsigned int val)
+ {
+   Serial.print("DEBUG: ");
+   Serial.print(str);
+   Serial.print(": ");
+   Serial.println(val);
+ }
 
-    void EEPROMSTRING::debug_table()
+void EEPROMSTRING::debug_table()
+{
+    debug("num strings",EEPROM.read(0));
+    
+    for (int i=0; i< num_strings; i++)
     {
-        debug("num strings",EEPROM.read(0));
-        
-        for (int i=0; i< num_strings; i++)
-        {
-          debug("string", i);
-          debug("start", getStartAddress(i));
-          debug("length", getStringLength(i));
-        }
+      debug("string", i);
+      debug("start", getStartAddress(i));
+      debug("length", getStringLength(i));
     }
+}
 
-        void EEPROMSTRING::dump_eeprom()
-        {
-          for (int i=0; i<EEPROM.length(); ++i)
-          {
-            Serial.print(EEPROM.read(i));
-            Serial.print(" ");
-          }
-          Serial.println();       
-        }
+void EEPROMSTRING::dump_eeprom()
+{
+  for (int i=0; i<EEPROM.length(); ++i)
+  {
+    Serial.print(EEPROM.read(i));
+    Serial.print(" ");
+  }
+  Serial.println();       
+}
 
     
 
